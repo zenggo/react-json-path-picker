@@ -156,7 +156,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
-var styles = __webpack_require__(4);
+__webpack_require__(4);
 var JsonPathPicker = (function (_super) {
     __extends(JsonPathPicker, _super);
     function JsonPathPicker(props) {
@@ -207,7 +207,6 @@ var JsonPathPicker = (function (_super) {
         }
     };
     JsonPathPicker.prototype.render = function () {
-        console.log('!!!!');
         var jsonObj;
         try {
             jsonObj = JSON.parse(this.props.json);
@@ -216,37 +215,11 @@ var JsonPathPicker = (function (_super) {
             console.log(error);
             return React.createElement("div", null, "Wrong json string input");
         }
-        // console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
         return (React.createElement("div", { onClick: this.choose }, json2Jsx(this.state.choosen, jsonObj)));
     };
     return JsonPathPicker;
 }(React.Component));
 exports.JsonPathPicker = JsonPathPicker;
-/**
- * get the target object of a json by path
- */
-// export function getTargetByJsonPath(json: string, path: string) :any {
-//     let obj = JSON.parse(json)
-//     if (path == '') {
-//         return obj
-//     } else {
-//         let attrs = path.split(' ')
-//         attrs.shift() // shift the first "" in attrs
-//         let target = obj
-//         for (let attr of attrs) {
-//             if (attr[0] === '.') {
-//                 target = target[attr.slice(1)]
-//             } else if (attr === '[*]') {
-//                 //td
-//             } else { // [x]
-//                 attr = attr.slice(1)
-//                 attr = attr.slice(0, attr.length-1)
-//                 target = target[parseInt(attr)]
-//             }
-//         }
-//         return target
-//     }
-// }
 /**
  * Check if a string represents a valid url
  * @return boolean
@@ -296,7 +269,7 @@ function json2Jsx(choosenPath, jsonObj, isLast, pathKey) {
 }
 // various types' render
 function renderNull(choosenPath, isLast, pathKey) {
-    return (React.createElement("span", { className: styles.json_literal },
+    return (React.createElement("span", { className: "json-literal" },
         React.createElement("i", { "data-pathKey": pathKey, className: getPickerStyle(getRelationship(choosenPath, pathKey)) }, "\uD83D\uDCCB"),
         React.createElement("span", null,
             'null',
@@ -304,7 +277,7 @@ function renderNull(choosenPath, isLast, pathKey) {
             isLast ? '' : ',')));
 }
 function renderUndefined(choosenPath, isLast, pathKey) {
-    return (React.createElement("span", { className: styles.json_literal },
+    return (React.createElement("span", { className: "json-literal" },
         React.createElement("i", { "data-pathKey": pathKey, className: getPickerStyle(getRelationship(choosenPath, pathKey)) }, "\uD83D\uDCCB"),
         React.createElement("span", null,
             'undefined',
@@ -316,7 +289,7 @@ function renderString(choosenPath, isLast, pathKey, str) {
     if (isUrl(str)) {
         return (React.createElement("span", null,
             React.createElement("i", { "data-pathKey": pathKey, className: getPickerStyle(getRelationship(choosenPath, pathKey)) }, "\uD83D\uDCCB"),
-            React.createElement("a", { target: "_blank", href: str, className: styles.json_string },
+            React.createElement("a", { target: "_blank", href: str, className: "json-literal" },
                 React.createElement("span", null,
                     "\"",
                     str,
@@ -324,7 +297,7 @@ function renderString(choosenPath, isLast, pathKey, str) {
                     isLast ? '' : ','))));
     }
     else {
-        return (React.createElement("span", { className: styles.json_string },
+        return (React.createElement("span", { className: "json-literal" },
             React.createElement("i", { "data-pathKey": pathKey, className: getPickerStyle(getRelationship(choosenPath, pathKey)) }, "\uD83D\uDCCB"),
             React.createElement("span", null,
                 "\"",
@@ -334,7 +307,7 @@ function renderString(choosenPath, isLast, pathKey, str) {
     }
 }
 function renderNumber(choosenPath, isLast, pathKey, num) {
-    return (React.createElement("span", { className: styles.json_literal },
+    return (React.createElement("span", { className: "json-literal" },
         React.createElement("i", { "data-pathKey": pathKey, className: getPickerStyle(getRelationship(choosenPath, pathKey)) }, "\uD83D\uDCCB"),
         React.createElement("span", null,
             num,
@@ -342,7 +315,7 @@ function renderNumber(choosenPath, isLast, pathKey, num) {
             isLast ? '' : ',')));
 }
 function renderBoolean(choosenPath, isLast, pathKey, bool) {
-    return (React.createElement("span", { className: styles.json_literal },
+    return (React.createElement("span", { className: "json-literal" },
         React.createElement("i", { "data-pathKey": pathKey, className: getPickerStyle(getRelationship(choosenPath, pathKey)) }, "\uD83D\uDCCB"),
         React.createElement("span", null,
             bool,
@@ -354,14 +327,14 @@ function renderObject(choosenPath, isLast, pathKey, obj) {
     var keys = Object.keys(obj);
     var length = keys.length;
     if (length > 0) {
-        return (React.createElement("div", { className: relation == 1 ? styles.picked_tree : '' },
+        return (React.createElement("div", { className: relation == 1 ? "json-picked_tree" : '' },
             React.createElement("div", null,
                 React.createElement("span", null, '{'),
                 React.createElement("i", { "data-pathKey": pathKey, className: getPickerStyle(relation) }, "\uD83D\uDCCB")),
-            React.createElement("ul", { className: styles.json_dict }, keys.map(function (key, idx) {
+            React.createElement("ul", { className: "json-dict" }, keys.map(function (key, idx) {
                 var nextPathKey = pathKey + " ." + key;
                 return (React.createElement("li", { key: nextPathKey },
-                    React.createElement("span", { className: styles.json_string + " " + styles.json_key }, key),
+                    React.createElement("span", { className: "json-literal json-key" }, key),
                     React.createElement("span", null, " : "),
                     json2Jsx(choosenPath, obj[key], idx == length - 1 ? true : false, nextPathKey)));
             })),
@@ -383,12 +356,12 @@ function renderArray(choosenPath, isLast, pathKey, arr) {
     var relation = getRelationship(choosenPath, pathKey);
     var length = arr.length;
     if (length > 0) {
-        return (React.createElement("div", { className: relation == 1 ? styles.picked_tree : '' },
+        return (React.createElement("div", { className: relation == 1 ? "json-picked_tree" : '' },
             React.createElement("div", null,
                 relation == 2 ? React.createElement("i", { "data-pathKey": pathKey, "data-chooseArr": "1", className: getPickArrStyle(choosenPath, pathKey) }, "[\u271A]") : null,
                 React.createElement("span", null, '['),
                 React.createElement("i", { "data-pathKey": pathKey, className: getPickerStyle(relation) }, "\uD83D\uDCCB")),
-            React.createElement("ol", { className: styles.json_array }, arr.map(function (value, idx) {
+            React.createElement("ol", { className: "json-array" }, arr.map(function (value, idx) {
                 var nextPathKey = pathKey + " [" + idx + "]";
                 return (React.createElement("li", { key: nextPathKey }, json2Jsx(choosenPath, value, idx == length - 1 ? true : false, nextPathKey)));
             })),
@@ -444,25 +417,50 @@ function getRelationship(choosenPath, path) {
  */
 function getPickerStyle(relation) {
     if (relation == 0) {
-        return styles.pick_path;
+        return "json-pick_path";
     }
     else if (relation == 1) {
-        return styles.pick_path + ' ' + styles.picked;
+        return "json-pick_path json-picked";
     }
     else {
-        return styles.pick_path + ' ' + styles.pick_path_ancestor;
+        return "json-pick_path json-pick_path_ancestor";
     }
 }
 function getPickArrStyle(choosenPath, nowPath) {
     var csp = choosenPath.split(' ');
     var np = nowPath.split(' ');
     if (csp[np.length] == '[*]') {
-        return styles.pick_arr + ' ' + styles.picked_arr;
+        return "json-pick_arr json-picked_arr";
     }
     else {
-        return styles.pick_arr;
+        return "json-pick_arr";
     }
 }
+/**
+ * get the target object of a json by path
+ */
+// export function getTargetByJsonPath(json: string, path: string) :any {
+//     let obj = JSON.parse(json)
+//     if (path == '') {
+//         return obj
+//     } else {
+//         let attrs = path.split(' ')
+//         attrs.shift() // shift the first "" in attrs
+//         let target = obj
+//         for (let attr of attrs) {
+//             if (attr[0] === '.') {
+//                 target = target[attr.slice(1)]
+//             } else if (attr === '[*]') {
+//                 //td
+//             } else { // [x]
+//                 attr = attr.slice(1)
+//                 attr = attr.slice(0, attr.length-1)
+//                 target = target[parseInt(attr)]
+//             }
+//         }
+//         return target
+//     }
+// } 
 
 
 /***/ }),
@@ -486,8 +484,8 @@ if(content.locals) module.exports = content.locals;
 if(false) {
 	// When the styles change, update the <style> tags
 	if(!content.locals) {
-		module.hot.accept("!!../node_modules/css-loader/index.js?modules&localIdentName=[name]_[local]-[hash:base64:5]!./style.css", function() {
-			var newContent = require("!!../node_modules/css-loader/index.js?modules&localIdentName=[name]_[local]-[hash:base64:5]!./style.css");
+		module.hot.accept("!!../node_modules/css-loader/index.js!./style.css", function() {
+			var newContent = require("!!../node_modules/css-loader/index.js!./style.css");
 			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 			update(newContent);
 		});
@@ -505,22 +503,10 @@ exports = module.exports = __webpack_require__(6)(undefined);
 
 
 // module
-exports.push([module.i, "/* Syntax highlighting for JSON objects */\r\nul.style_json_dict-1c95z, ol.style_json_array-1uuRZ {\r\n  list-style-type: none;\r\n  margin: 0 0 0 1px;\r\n  border-left: 1px dotted #ccc;\r\n  padding-left: 2em;\r\n}\r\n.style_json_string-1ILqc, .style_json_literal-2AZpV {\r\n  color: #777;\r\n}\r\n.style_json_key-3lIfy {\r\n  font-weight: bold;\r\n  color: #108ee9;\r\n}\r\n\r\n/* Copy path icon */\r\n.style_pick_path-1SHFp {\r\n  color: #ccc;\r\n  cursor: pointer;\r\n  margin-right: 12px;\r\n  margin-left: 5px;\r\n  font-style: normal;\r\n}\r\n\r\n.style_pick_path_ancestor-tbVVV {\r\n  color: #7f3dc5;\r\n}\r\n\r\n.style_pick_path-1SHFp:hover, .style_picked-z7n_M {\r\n  color: #f04134;\r\n}\r\n\r\n.style_picked_tree-1nO5w {\r\n  background: #eee;\r\n}\r\n\r\n.style_pick_arr-NkdHU {\r\n  position: relative;\r\n  right: 2px;\r\n  color: #ccc;\r\n  cursor: pointer;\r\n  font-style: normal;\r\n  font-weight: bold;\r\n  margin-left: -20px;\r\n}\r\n\r\n.style_pick_arr-NkdHU:hover, .style_picked_arr-x3Rq1 {\r\n  color: #f04134;\r\n}", ""]);
+exports.push([module.i, "/* Syntax highlighting for JSON objects */\r\nul.json-dict, ol.json-array {\r\n  list-style-type: none;\r\n  margin: 0 0 0 1px;\r\n  border-left: 1px dotted #ccc;\r\n  padding-left: 2em;\r\n}\r\n.json-literal {\r\n  color: #777;\r\n}\r\n.json-key {\r\n  font-weight: bold;\r\n  color: #108ee9;\r\n}\r\n\r\n/* Copy path icon */\r\n.json-pick_path {\r\n  color: #ccc;\r\n  cursor: pointer;\r\n  margin-right: 12px;\r\n  margin-left: 5px;\r\n  font-style: normal;\r\n}\r\n\r\n.json-pick_path_ancestor {\r\n  color: #7f3dc5;\r\n}\r\n\r\n.json-pick_path:hover, .json-picked {\r\n  color: #f04134;\r\n}\r\n\r\n.json-picked_tree {\r\n  background: #eee;\r\n}\r\n\r\n.json-pick_arr {\r\n  position: relative;\r\n  right: 2px;\r\n  color: #ccc;\r\n  cursor: pointer;\r\n  font-style: normal;\r\n  font-weight: bold;\r\n  margin-left: -20px;\r\n}\r\n\r\n.json-pick_arr:hover, .json-picked_arr {\r\n  color: #f04134;\r\n}", ""]);
 
 // exports
-exports.locals = {
-	"json_dict": "style_json_dict-1c95z",
-	"json_array": "style_json_array-1uuRZ",
-	"json_string": "style_json_string-1ILqc",
-	"json_literal": "style_json_literal-2AZpV",
-	"json_key": "style_json_key-3lIfy",
-	"pick_path": "style_pick_path-1SHFp",
-	"pick_path_ancestor": "style_pick_path_ancestor-tbVVV",
-	"picked": "style_picked-z7n_M",
-	"picked_tree": "style_picked_tree-1nO5w",
-	"pick_arr": "style_pick_arr-NkdHU",
-	"picked_arr": "style_picked_arr-x3Rq1"
-};
+
 
 /***/ }),
 /* 6 */

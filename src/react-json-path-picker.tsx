@@ -6,7 +6,7 @@
  */
 
 import * as React from 'react'
-import * as styles from './style.css'
+import './style.css'
 
 interface P {
     json: string // json string
@@ -68,7 +68,6 @@ export class JsonPathPicker extends React.Component<P, S> {
         }
     }
     render() {
-        console.log('!!!!')
         let jsonObj: any
         try {
             jsonObj = JSON.parse(this.props.json)
@@ -76,39 +75,11 @@ export class JsonPathPicker extends React.Component<P, S> {
             console.log(error)
             return <div>Wrong json string input</div>
         }
-        // console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
         return (<div onClick={this.choose}>
             { json2Jsx(this.state.choosen, jsonObj) }
         </div>)
     }
 }
-
-
-/**
- * get the target object of a json by path
- */
-// export function getTargetByJsonPath(json: string, path: string) :any {
-//     let obj = JSON.parse(json)
-//     if (path == '') {
-//         return obj
-//     } else {
-//         let attrs = path.split(' ')
-//         attrs.shift() // shift the first "" in attrs
-//         let target = obj
-//         for (let attr of attrs) {
-//             if (attr[0] === '.') {
-//                 target = target[attr.slice(1)]
-//             } else if (attr === '[*]') {
-//                 //td
-//             } else { // [x]
-//                 attr = attr.slice(1)
-//                 attr = attr.slice(0, attr.length-1)
-//                 target = target[parseInt(attr)]
-//             }
-//         }
-//         return target
-//     }
-// }
 
 
 /**
@@ -158,14 +129,14 @@ function json2Jsx(choosenPath: string|null, jsonObj: any, isLast: boolean = true
 
 // various types' render
 function renderNull(choosenPath: string, isLast: boolean, pathKey: string) :React.ReactElement<any> {
-    return (<span className={styles.json_literal}>
+    return (<span className="json-literal">
         <i data-pathKey={pathKey} className={getPickerStyle(getRelationship(choosenPath, pathKey))}>📋</i>
         <span>{'null'} {isLast?'':','}</span>
     </span>)
 }
 
 function renderUndefined(choosenPath: string, isLast: boolean, pathKey: string) :React.ReactElement<any> {
-    return (<span className={styles.json_literal}>
+    return (<span className="json-literal">
         <i data-pathKey={pathKey} className={getPickerStyle(getRelationship(choosenPath, pathKey))}>📋</i>
         <span>{'undefined'} {isLast?'':','}</span>
     </span>)
@@ -176,12 +147,12 @@ function renderString(choosenPath: string, isLast: boolean, pathKey: string, str
     if (isUrl(str)) {
         return (<span>
             <i data-pathKey={pathKey} className={getPickerStyle(getRelationship(choosenPath, pathKey))}>📋</i>
-            <a target="_blank" href={str} className={styles.json_string}>
+            <a target="_blank" href={str} className="json-literal">
                 <span>"{str}" {isLast?'':','}</span>
             </a>
         </span>)
     } else {
-        return (<span className={styles.json_string}>
+        return (<span className="json-literal">
             <i data-pathKey={pathKey} className={getPickerStyle(getRelationship(choosenPath, pathKey))}>📋</i>
             <span>"{str}" {isLast?'':','}</span>
         </span>)
@@ -189,14 +160,14 @@ function renderString(choosenPath: string, isLast: boolean, pathKey: string, str
 }
 
 function renderNumber(choosenPath: string, isLast: boolean, pathKey: string, num: number) :React.ReactElement<any> {
-    return (<span className={styles.json_literal}>
+    return (<span className="json-literal">
         <i data-pathKey={pathKey} className={getPickerStyle(getRelationship(choosenPath, pathKey))}>📋</i> 
         <span>{num} {isLast?'':','}</span>
     </span>)
 }
 
 function renderBoolean(choosenPath: string, isLast: boolean, pathKey: string, bool: boolean) :React.ReactElement<any> {
-    return (<span className={styles.json_literal}>
+    return (<span className="json-literal">
         <i data-pathKey={pathKey} className={getPickerStyle(getRelationship(choosenPath, pathKey))}>📋</i>
         <span>{bool} {isLast?'':','}</span>
     </span>)
@@ -208,17 +179,17 @@ function renderObject(choosenPath: string, isLast: boolean, pathKey: string, obj
     let keys = Object.keys(obj)
     let length = keys.length
     if (length > 0) {
-        return (<div className={relation==1 ? styles.picked_tree : ''}>
+        return (<div className={relation==1 ? "json-picked_tree" : ''}>
             <div>
                 <span>{'{'}</span>
                 <i data-pathKey={pathKey} className={getPickerStyle(relation)}>📋</i>
             </div>
-            <ul className={styles.json_dict}>
+            <ul className="json-dict">
                 {
                     keys.map((key, idx) => {
                         let nextPathKey = `${pathKey} .${key}`
                         return (<li key={nextPathKey}>
-                            <span className={`${styles.json_string} ${styles.json_key}`}>{key}</span>
+                            <span className="json-literal json-key">{key}</span>
                             <span> : </span>
                             { json2Jsx(choosenPath, obj[key], idx == length-1 ? true : false, nextPathKey) }
                         </li>)
@@ -240,13 +211,13 @@ function renderArray(choosenPath: string, isLast: boolean, pathKey: string, arr:
 
     let length = arr.length
     if (length > 0) {
-        return (<div className={relation==1 ? styles.picked_tree : ''}>
+        return (<div className={relation==1 ? "json-picked_tree" : ''}>
             <div>
                 { relation==2 ? <i data-pathKey={pathKey} data-chooseArr="1" className={getPickArrStyle(choosenPath, pathKey)}>[✚]</i> : null }
                 <span>{'['}</span>
                 <i data-pathKey={pathKey} className={getPickerStyle(relation)}>📋</i>
             </div>
-            <ol className={styles.json_array}>
+            <ol className="json-array">
                 {
                     arr.map((value, idx) => {
                         let nextPathKey = `${pathKey} [${idx}]`
@@ -308,11 +279,11 @@ function getRelationship(choosenPath: string|null, path: string) :number {
  */
 function getPickerStyle(relation: number) :string {
     if (relation == 0) {
-        return styles.pick_path
+        return "json-pick_path"
     } else if (relation == 1) {
-        return styles.pick_path + ' ' + styles.picked
+        return "json-pick_path json-picked"
     } else {
-        return styles.pick_path + ' ' + styles.pick_path_ancestor
+        return "json-pick_path json-pick_path_ancestor"
     }
 }
 
@@ -320,8 +291,35 @@ function getPickArrStyle(choosenPath: string, nowPath: string) :string {
     let csp = choosenPath.split(' ')
     let np = nowPath.split(' ')
     if (csp[np.length] == '[*]') {
-        return styles.pick_arr + ' ' + styles.picked_arr
+        return "json-pick_arr json-picked_arr"
     } else {
-        return styles.pick_arr
+        return "json-pick_arr"
     }
 }
+
+
+/**
+ * get the target object of a json by path
+ */
+// export function getTargetByJsonPath(json: string, path: string) :any {
+//     let obj = JSON.parse(json)
+//     if (path == '') {
+//         return obj
+//     } else {
+//         let attrs = path.split(' ')
+//         attrs.shift() // shift the first "" in attrs
+//         let target = obj
+//         for (let attr of attrs) {
+//             if (attr[0] === '.') {
+//                 target = target[attr.slice(1)]
+//             } else if (attr === '[*]') {
+//                 //td
+//             } else { // [x]
+//                 attr = attr.slice(1)
+//                 attr = attr.slice(0, attr.length-1)
+//                 target = target[parseInt(attr)]
+//             }
+//         }
+//         return target
+//     }
+// }

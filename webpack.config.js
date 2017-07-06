@@ -14,7 +14,7 @@ module.exports = {
 
     resolve: {
         // Add '.ts' and '.tsx' as resolvable extensions.
-        extensions: [".ts", ".tsx", ".js", ".json"]
+        extensions: [".ts", ".tsx", ".js", ".json", ".css"]
     },
 
     module: {
@@ -24,7 +24,7 @@ module.exports = {
 
             // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
             { enforce: "pre", test: /\.js$/, loader: "source-map-loader" },
-            { test: /\.css$/, loader: "style-loader!css-loader?modules&localIdentName=[name]_[local]-[hash:base64:5]" }
+            { test: /\.css$/, loader: "style-loader!css-loader" }
         ]
     },
 

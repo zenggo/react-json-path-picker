@@ -4,11 +4,17 @@
   "description": "a react json path picker, based on json-path-picker",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "webpack",
+    "build-win": "tsc & copy .\\src\\style.css .\\dist\\style.css",
+    "build-unix": "tsc && cp ./src/style.css ./dist/style.css"
   },
   "author": "zenggo",
   "license": "ISC",
   "keywords": "json path",
+  "git repository": "https://github.com/zenggo/react-json-path-picker",
+  "dependencies": {
+    "react": "^15.6.1"
+  },
   "devDependencies": {
     "@types/react": "^15.0.34",
     "@types/react-dom": "^15.5.1",
