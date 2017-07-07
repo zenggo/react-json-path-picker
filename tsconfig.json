@@ -5,8 +5,8 @@
         "module": "commonjs",
         "target": "es5",
         "baseUrl": "./",
-        "jsx": "react",
-        "allowJs": true
+        "jsx": "react"
+        // "allowJs": true
     },
     "include": [
         "src/*"

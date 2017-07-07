@@ -3,10 +3,11 @@
   "version": "1.0.1",
   "description": "a react json path picker, based on json-path-picker",
   "main": "index.js",
+  "types": "./dist/react-json-path-picker.d.ts",
   "scripts": {
     "test": "webpack",
-    "build-win": "tsc & copy .\\src\\style.css .\\dist\\style.css",
-    "build-unix": "tsc && cp ./src/style.css ./dist/style.css"
+    "build-win": "tsc -d & copy .\\src\\style.css .\\dist\\style.css",
+    "build-unix": "tsc -d && cp ./src/style.css ./dist/style.css"
   },
   "author": "zenggo",
   "license": "ISC",

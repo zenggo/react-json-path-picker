@@ -8,12 +8,12 @@
 import * as React from 'react'
 import './style.css'
 
-interface P {
+export interface P {
     json: string // json string
     onChoose?(path :string) :any
 }
 
-interface S {
+export interface S {
     choosen: string|null // a path string, joined by " ",  like ".a .b [3] .c"
 }
 
