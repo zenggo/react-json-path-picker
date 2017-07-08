@@ -96,14 +96,21 @@ var Main = (function (_super) {
         _this._text = '';
         _this.state = {
             json: null,
-            path: ''
+            path: null,
+            pathText: ''
         };
         _this.generate = _this.generate.bind(_this);
+        _this.mapPath = _this.mapPath.bind(_this);
         return _this;
     }
     Main.prototype.generate = function () {
         this.setState({
             json: this._text.trim() || '""'
+        });
+    };
+    Main.prototype.mapPath = function () {
+        this.setState({
+            path: this.state.pathText
         });
     };
     Main.prototype.render = function () {
@@ -113,13 +120,15 @@ var Main = (function (_super) {
                 React.createElement("textarea", { style: { width: '80%', height: 300 }, onChange: function (e) { return _this._text = e.target.value; } }),
                 React.createElement("p", null,
                     React.createElement("button", { style: { width: '80%' }, onClick: this.generate }, "generate")),
-                React.createElement("p", { style: { width: '80%', minHeight: '50px', boxSizing: 'border-box', border: '1px solid #108ee9', padding: '10px' } }, this.state.path)),
+                React.createElement("textarea", { style: { width: '80%', minHeight: '50px', boxSizing: 'border-box', border: '1px solid #108ee9', padding: '10px' }, onInput: function (e) {
+                        _this.setState({
+                            pathText: e.target.value
+                        });
+                    }, value: this.state.pathText }),
+                React.createElement("p", null,
+                    React.createElement("button", { style: { width: '80%' }, onClick: this.mapPath }, "map path"))),
             React.createElement("div", { style: { width: '70%', float: 'left', boxSizing: 'border-box', paddingLeft: '50px' } },
-                React.createElement(react_json_path_picker_1.JsonPathPicker, { json: this.state.json, onChoose: function (path) {
-                        console.log(path);
-                        _this.setState({ path: path });
-                        { }
-                    } }))));
+                React.createElement(react_json_path_picker_1.JsonPathPicker, { showOnly: true, json: this.state.json }))));
     };
     return Main;
 }(React.Component));
@@ -142,7 +151,7 @@ module.exports = ReactDOM;
  * author: akunzeng
  * 20170705
  *
- * notice!!!: JsonPathPick's prop - json, shouldn't have any key named "." or "[" or "]", otherwise the getTargetByJsonPath function (or other function you defined) will not work properlly.
+ * notice!!!: JsonPathPick's prop - json, shouldn't have any key name including " ", otherwise the getTargetByJsonPath function (or other function you defined) will not work properlly.
  */
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -179,7 +188,9 @@ var JsonPathPicker = (function (_super) {
                 _this.setState({
                     choosen: choosenPath
                 }, function () {
-                    _this.props.onChoose && _this.props.onChoose(_this.state.choosen);
+                    var pathText = _this.state.choosen;
+                    pathText = pathText.replace(/ /g, '');
+                    _this.props.onChoose && _this.props.onChoose(pathText);
                 });
             }
         };
@@ -192,6 +203,19 @@ var JsonPathPicker = (function (_super) {
         if (nextp.json !== this.props.json) {
             this.setState({
                 choosen: null // reset choosen
+            });
+        }
+        if (nextp.path !== undefined) {
+            var nextPath = void 0;
+            if (!nextp.path) {
+                nextPath = nextp.path;
+            }
+            else {
+                nextPath = nextp.path.replace(/\./g, ' .');
+                nextPath = nextPath.replace(/\[/g, ' [');
+            }
+            this.setState({
+                choosen: nextPath
             });
         }
     };
@@ -215,7 +239,9 @@ var JsonPathPicker = (function (_super) {
             console.log(error);
             return React.createElement("div", null, "Wrong json string input");
         }
-        return (React.createElement("div", { onClick: this.choose }, json2Jsx(this.state.choosen, jsonObj)));
+        return (React.createElement("div", { onClick: this.props.showOnly ? null : this.choose }, this.props.showOnly
+            ? json2Jsx_onlyForShow(jsonObj)
+            : json2Jsx(this.state.choosen, jsonObj)));
     };
     return JsonPathPicker;
 }(React.Component));
@@ -437,30 +463,102 @@ function getPickArrStyle(choosenPath, nowPath) {
     }
 }
 /**
- * get the target object of a json by path
+ * only for show json data
  */
-// export function getTargetByJsonPath(json: string, path: string) :any {
-//     let obj = JSON.parse(json)
-//     if (path == '') {
-//         return obj
-//     } else {
-//         let attrs = path.split(' ')
-//         attrs.shift() // shift the first "" in attrs
-//         let target = obj
-//         for (let attr of attrs) {
-//             if (attr[0] === '.') {
-//                 target = target[attr.slice(1)]
-//             } else if (attr === '[*]') {
-//                 //td
-//             } else { // [x]
-//                 attr = attr.slice(1)
-//                 attr = attr.slice(0, attr.length-1)
-//                 target = target[parseInt(attr)]
-//             }
-//         }
-//         return target
-//     }
-// } 
+function json2Jsx_onlyForShow(jsonObj, isLast) {
+    if (isLast === void 0) { isLast = true; }
+    if (jsonObj === null) {
+        return (React.createElement("span", { className: "json-literal" },
+            React.createElement("span", null,
+                'null',
+                " ",
+                isLast ? '' : ',')));
+    }
+    else if (jsonObj === undefined) {
+        return (React.createElement("span", { className: "json-literal" },
+            React.createElement("span", null,
+                'undefined',
+                " ",
+                isLast ? '' : ',')));
+    }
+    else if (Array.isArray(jsonObj)) {
+        var arr = jsonObj;
+        var length_1 = arr.length;
+        return (React.createElement("div", null,
+            React.createElement("div", null,
+                React.createElement("span", null, '[')),
+            React.createElement("ol", { className: "json-array" }, arr.map(function (value, idx) {
+                return (React.createElement("li", { key: idx }, json2Jsx_onlyForShow(value, idx == length_1 - 1 ? true : false)));
+            })),
+            React.createElement("div", null,
+                ']',
+                " ",
+                isLast ? '' : ',')));
+    }
+    else if (typeof jsonObj == 'string') {
+        var str = escape(jsonObj);
+        if (isUrl(str)) {
+            return (React.createElement("span", null,
+                React.createElement("a", { target: "_blank", href: str, className: "json-literal" },
+                    React.createElement("span", null,
+                        "\"",
+                        str,
+                        "\" ",
+                        isLast ? '' : ','))));
+        }
+        else {
+            return (React.createElement("span", { className: "json-literal" },
+                React.createElement("span", null,
+                    "\"",
+                    str,
+                    "\" ",
+                    isLast ? '' : ',')));
+        }
+    }
+    else if (typeof jsonObj == 'number') {
+        return (React.createElement("span", { className: "json-literal" },
+            React.createElement("span", null,
+                jsonObj,
+                " ",
+                isLast ? '' : ',')));
+    }
+    else if (typeof jsonObj == 'boolean') {
+        return (React.createElement("span", { className: "json-literal" },
+            React.createElement("span", null,
+                jsonObj,
+                " ",
+                isLast ? '' : ',')));
+    }
+    else if (typeof jsonObj == 'object') {
+        var keys = Object.keys(jsonObj);
+        var length_2 = keys.length;
+        if (length_2 > 0) {
+            return (React.createElement("div", null,
+                React.createElement("div", null,
+                    React.createElement("span", null, '{')),
+                React.createElement("ul", { className: "json-dict" }, keys.map(function (key, idx) {
+                    return (React.createElement("li", { key: idx },
+                        React.createElement("span", { className: "json-literal json-key" }, key),
+                        React.createElement("span", null, " : "),
+                        json2Jsx_onlyForShow(jsonObj[key], idx == length_2 - 1 ? true : false)));
+                })),
+                React.createElement("div", null,
+                    '}',
+                    " ",
+                    isLast ? '' : ',')));
+        }
+        else {
+            return (React.createElement("span", null,
+                React.createElement("span", null,
+                    "{ }",
+                    " ",
+                    isLast ? '' : ',')));
+        }
+    }
+    else {
+        return null;
+    }
+}
 
 
 /***/ }),

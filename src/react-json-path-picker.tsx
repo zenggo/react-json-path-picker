@@ -2,7 +2,7 @@
  * author: akunzeng
  * 20170705
  * 
- * notice!!!: JsonPathPick's prop - json, shouldn't have any key named "." or "[" or "]", otherwise the getTargetByJsonPath function (or other function you defined) will not work properlly.
+ * notice!!!: JsonPathPick's prop - json, shouldn't have any key name including " ", otherwise the getTargetByJsonPath function (or other function you defined) will not work properlly.
  */
 
 import * as React from 'react'
@@ -11,6 +11,8 @@ import './style.css'
 export interface P {
     json: string // json string
     onChoose?(path :string) :any
+    path?: string | null
+    showOnly?: boolean
 }
 
 export interface S {
@@ -28,6 +30,18 @@ export class JsonPathPicker extends React.Component<P, S> {
         if (nextp.json !== this.props.json) { // string compare
             this.setState({
                 choosen: null // reset choosen
+            })
+        }
+        if (nextp.path !== undefined) {
+            let nextPath: string | null
+            if (!nextp.path) { // '' | null
+                nextPath = nextp.path
+            } else {
+                nextPath = nextp.path.replace(/\./g, ' .')
+                nextPath = nextPath.replace(/\[/g, ' [')
+            }
+            this.setState({
+                choosen: nextPath
             })
         }
     }
@@ -62,7 +76,9 @@ export class JsonPathPicker extends React.Component<P, S> {
             this.setState({
                 choosen: choosenPath
             }, ()=> {
-                this.props.onChoose && this.props.onChoose(this.state.choosen)
+                let pathText = this.state.choosen
+                pathText = pathText.replace(/ /g, '')
+                this.props.onChoose && this.props.onChoose(pathText)
             })
 
         }
@@ -75,8 +91,10 @@ export class JsonPathPicker extends React.Component<P, S> {
             console.log(error)
             return <div>Wrong json string input</div>
         }
-        return (<div onClick={this.choose}>
-            { json2Jsx(this.state.choosen, jsonObj) }
+        return (<div onClick={this.props.showOnly ? null : this.choose}>
+            { this.props.showOnly
+                ? json2Jsx_onlyForShow(jsonObj)
+                : json2Jsx(this.state.choosen, jsonObj) }
         </div>)
     }
 }
@@ -125,7 +143,6 @@ function json2Jsx(choosenPath: string|null, jsonObj: any, isLast: boolean = true
     }
 
 }
-
 
 // various types' render
 function renderNull(choosenPath: string, isLast: boolean, pathKey: string) :React.ReactElement<any> {
@@ -244,7 +261,6 @@ function renderArray(choosenPath: string, isLast: boolean, pathKey: string, arr:
  * 2 ancestor
  */
 function getRelationship(choosenPath: string|null, path: string) :number {
-    
     if (choosenPath === null) return 0
 
     let choosenAttrs = choosenPath.split(' ')
@@ -299,27 +315,83 @@ function getPickArrStyle(choosenPath: string, nowPath: string) :string {
 
 
 /**
- * get the target object of a json by path
+ * only for show json data
  */
-// export function getTargetByJsonPath(json: string, path: string) :any {
-//     let obj = JSON.parse(json)
-//     if (path == '') {
-//         return obj
-//     } else {
-//         let attrs = path.split(' ')
-//         attrs.shift() // shift the first "" in attrs
-//         let target = obj
-//         for (let attr of attrs) {
-//             if (attr[0] === '.') {
-//                 target = target[attr.slice(1)]
-//             } else if (attr === '[*]') {
-//                 //td
-//             } else { // [x]
-//                 attr = attr.slice(1)
-//                 attr = attr.slice(0, attr.length-1)
-//                 target = target[parseInt(attr)]
-//             }
-//         }
-//         return target
-//     }
-// }
+function json2Jsx_onlyForShow(jsonObj: any, isLast: boolean = true) :React.ReactElement<any> {
+    if (jsonObj === null) {
+        return (<span className="json-literal">
+            <span>{'null'} {isLast?'':','}</span>
+        </span>)
+    } else if (jsonObj === undefined) {
+        return (<span className="json-literal">
+            <span>{'undefined'} {isLast?'':','}</span>
+        </span>)
+    } else if (Array.isArray(jsonObj)) {
+        let arr = jsonObj
+        let length = arr.length
+        return (<div>
+            <div>
+                <span>{'['}</span>
+            </div>
+            <ol className="json-array">
+                {
+                    arr.map((value, idx) => {
+                        return (<li key={idx}>
+                            { json2Jsx_onlyForShow(value, idx == length-1 ? true : false) }
+                        </li>)
+                    })
+                }
+            </ol>
+            <div>{']'} {isLast?'':','}</div>
+        </div>)
+    } else if (typeof jsonObj == 'string') {
+        let str = escape(jsonObj)
+        if (isUrl(str)) {
+            return (<span>
+                <a target="_blank" href={str} className="json-literal">
+                    <span>"{str}" {isLast?'':','}</span>
+                </a>
+            </span>)
+        } else {
+            return (<span className="json-literal">
+                <span>"{str}" {isLast?'':','}</span>
+            </span>)
+        }
+    } else if (typeof jsonObj == 'number') {
+        return (<span className="json-literal">
+            <span>{jsonObj} {isLast?'':','}</span>
+        </span>)
+    } else if (typeof jsonObj == 'boolean') {
+        return (<span className="json-literal">
+            <span>{jsonObj} {isLast?'':','}</span>
+        </span>)
+    } else if (typeof jsonObj == 'object') {
+        let keys = Object.keys(jsonObj)
+        let length = keys.length
+        if (length > 0) {
+            return (<div>
+                <div>
+                    <span>{'{'}</span>
+                </div>
+                <ul className="json-dict">
+                    {
+                        keys.map((key, idx) => {
+                            return (<li key={idx}>
+                                <span className="json-literal json-key">{key}</span>
+                                <span> : </span>
+                                { json2Jsx_onlyForShow(jsonObj[key], idx == length-1 ? true : false) }
+                            </li>)
+                        })
+                    }
+                </ul>
+                <div>{'}'} {isLast?'':','}</div>
+            </div>)
+        } else {
+            return (<span>
+                <span>{"{ }"} {isLast?'':','}</span>
+            </span>)
+        }
+    } else {
+        return null
+    }
+}

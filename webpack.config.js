@@ -4,12 +4,6 @@ module.exports = {
         filename: "test.bundle.js",
         path: __dirname + "/test"
     },
-    // entry: "./src/react-json-path-picker",
-    // output: {
-    //     filename: "react-json-path-picker.js",
-    //     path: __dirname + "/dist"
-    // },
-    // Enable sourcemaps for debugging webpack's output.
     devtool: "source-map",
 
     resolve: {
