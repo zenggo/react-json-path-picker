@@ -52,9 +52,7 @@ class Main extends React.Component<undefined, S> {
             </div>
             <div style={{width:'70%',float:'left',boxSizing:'border-box',paddingLeft:'50px'}}>
                 <JsonPathPicker
-                    showOnly
                     json={this.state.json}
-                    
                 />
             </div>
         </div>)
