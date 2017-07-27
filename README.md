@@ -19,7 +19,7 @@ only show json tree:
 path picker:
 ```
 // every time state.json changes will cause JsonPathPicker reflush, and the pick state will reset
-<JsonPathPicker json={this.state.json} onChange={this.onPickPath} />
+<JsonPathPicker json={this.state.json} onChoose={this.onPickPath} />
 
 onPickPath = (path)=> {...}
 ```
