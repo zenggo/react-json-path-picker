@@ -128,7 +128,7 @@ var Main = (function (_super) {
                 React.createElement("p", null,
                     React.createElement("button", { style: { width: '80%' }, onClick: this.mapPath }, "map path"))),
             React.createElement("div", { style: { width: '70%', float: 'left', boxSizing: 'border-box', paddingLeft: '50px' } },
-                React.createElement(react_json_path_picker_1.JsonPathPicker, { showOnly: true, json: this.state.json }))));
+                React.createElement(react_json_path_picker_1.JsonPathPicker, { json: this.state.json, onChoose: function (path) { return _this.setState({ path: path, pathText: path }); }, path: this.state.path }))));
     };
     return Main;
 }(React.Component));
