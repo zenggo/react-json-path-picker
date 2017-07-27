@@ -26,7 +26,7 @@ onPickPath = (path)=> {...}
 
 and you can use path prop to controll it:
 ```
-<JsonPathPicker json={this.state.json} path={this.state.path} onChange={this.onPickPath} />
+<JsonPathPicker json={this.state.json} path={this.state.path} onChoose={this.onPickPath} />
 
 onPickPath = (path)=> {
   this.setState({path})
