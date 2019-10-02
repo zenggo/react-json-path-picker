@@ -14,15 +14,15 @@
   "keywords": "json path",
   "git repository": "https://github.com/zenggo/react-json-path-picker",
   "dependencies": {
-    "react": "^15.6.1"
+    "react": "^16.8.6"
   },
   "devDependencies": {
     "@types/react": "^15.0.34",
     "@types/react-dom": "^15.5.1",
     "awesome-typescript-loader": "^3.2.1",
     "css-loader": "^0.28.4",
-    "react": "^15.6.1",
-    "react-dom": "^15.6.1",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
     "source-map-loader": "^0.2.1",
     "sts": "^2.0.2",
     "style-loader": "^0.18.2",
