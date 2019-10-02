@@ -61,7 +61,7 @@ export class JsonPathPicker extends React.Component<P, S> {
             let pathKey = target.getAttribute('data-pathkey')
             let choosenPath
 
-            if (target.hasAttribute('data-chooseArr')) {
+            if (target.hasAttribute('data-choosearr')) {
 
                 choosenPath = this.state.choosen
                 let tmp = choosenPath.split(' ')
@@ -230,7 +230,7 @@ function renderArray(choosenPath: string, isLast: boolean, pathKey: string, arr:
     if (length > 0) {
         return (<div className={relation==1 ? "json-picked_tree" : ''}>
             <div>
-                { relation==2 ? <i data-pathkey={pathKey} data-chooseArr="1" className={getPickArrStyle(choosenPath, pathKey)}>[✚]</i> : null }
+                { relation==2 ? <i data-pathkey={pathKey} data-choosearr="1" className={getPickArrStyle(choosenPath, pathKey)}>[✚]</i> : null }
                 <span>{'['}</span>
                 <i data-pathkey={pathKey} className={getPickerStyle(relation)}>📋</i>
             </div>
