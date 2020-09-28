@@ -1,4 +1,3 @@
-/// <reference types="react" />
 /**
  * author: akunzeng
  * 20170705
