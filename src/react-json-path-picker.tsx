@@ -147,14 +147,14 @@ function json2Jsx(choosenPath: string|null, jsonObj: any, isLast: boolean = true
 // various types' render
 function renderNull(choosenPath: string, isLast: boolean, pathKey: string) :React.ReactElement<any> {
     return (<span className="json-literal">
-        <i data-pathkey={pathKey} className={getPickerStyle(getRelationship(choosenPath, pathKey))}>📋</i>
+        <i data-pathkey={pathKey} data-querykey={pathKey.replace(/\"/g, '')} className={getPickerStyle(getRelationship(choosenPath, pathKey))}>📋</i>
         <span>{'null'} {isLast?'':','}</span>
     </span>)
 }
 
 function renderUndefined(choosenPath: string, isLast: boolean, pathKey: string) :React.ReactElement<any> {
     return (<span className="json-literal">
-        <i data-pathkey={pathKey} className={getPickerStyle(getRelationship(choosenPath, pathKey))}>📋</i>
+        <i data-pathkey={pathKey} data-querykey={pathKey.replace(/\"/g, '')} className={getPickerStyle(getRelationship(choosenPath, pathKey))}>📋</i>
         <span>{'undefined'} {isLast?'':','}</span>
     </span>)
 }
@@ -163,14 +163,14 @@ function renderString(choosenPath: string, isLast: boolean, pathKey: string, str
     str = escape(str)
     if (isUrl(str)) {
         return (<span>
-            <i data-pathkey={pathKey} className={getPickerStyle(getRelationship(choosenPath, pathKey))}>📋</i>
+            <i data-pathkey={pathKey} data-querykey={pathKey.replace(/\"/g, '')} className={getPickerStyle(getRelationship(choosenPath, pathKey))}>📋</i>
             <a target="_blank" href={str} className="json-literal">
                 <span>"{str}" {isLast?'':','}</span>
             </a>
         </span>)
     } else {
         return (<span className="json-literal">
-            <i data-pathkey={pathKey} className={getPickerStyle(getRelationship(choosenPath, pathKey))}>📋</i>
+            <i data-pathkey={pathKey} data-querykey={pathKey.replace(/\"/g, '')} className={getPickerStyle(getRelationship(choosenPath, pathKey))}>📋</i>
             <span>"{str}" {isLast?'':','}</span>
         </span>)
     }
@@ -178,14 +178,14 @@ function renderString(choosenPath: string, isLast: boolean, pathKey: string, str
 
 function renderNumber(choosenPath: string, isLast: boolean, pathKey: string, num: number) :React.ReactElement<any> {
     return (<span className="json-literal">
-        <i data-pathkey={pathKey} className={getPickerStyle(getRelationship(choosenPath, pathKey))}>📋</i> 
+        <i data-pathkey={pathKey} data-querykey={pathKey.replace(/\"/g, '')} className={getPickerStyle(getRelationship(choosenPath, pathKey))}>📋</i> 
         <span>{num} {isLast?'':','}</span>
     </span>)
 }
 
 function renderBoolean(choosenPath: string, isLast: boolean, pathKey: string, bool: boolean) :React.ReactElement<any> {
     return (<span className="json-literal">
-        <i data-pathkey={pathKey} className={getPickerStyle(getRelationship(choosenPath, pathKey))}>📋</i>
+        <i data-pathkey={pathKey} data-querykey={pathKey.replace(/\"/g, '')} className={getPickerStyle(getRelationship(choosenPath, pathKey))}>📋</i>
         <span>{bool} {isLast?'':','}</span>
     </span>)
 }
@@ -199,12 +199,12 @@ function renderObject(choosenPath: string, isLast: boolean, pathKey: string, obj
         return (<div className={relation==1 ? "json-picked_tree" : ''}>
             <div>
                 <span>{'{'}</span>
-                <i data-pathkey={pathKey} className={getPickerStyle(relation)}>📋</i>
+                <i data-pathkey={pathKey} data-querykey={pathKey.replace(/\"/g, '')} className={getPickerStyle(relation)}>📋</i>
             </div>
             <ul className="json-dict">
                 {
                     keys.map((key, idx) => {
-                        let nextPathKey = `${pathKey} .${key}`
+                        let nextPathKey = `${pathKey} ."${key}"`
                         return (<li key={nextPathKey}>
                             <span className="json-literal json-key">{key}</span>
                             <span> : </span>
@@ -217,7 +217,7 @@ function renderObject(choosenPath: string, isLast: boolean, pathKey: string, obj
         </div>)
     } else {
         return (<span>
-            <i data-pathkey={pathKey} className={getPickerStyle(relation)}>📋</i>
+            <i data-pathkey={pathKey} data-querykey={pathKey.replace(/\"/g, '')} className={getPickerStyle(relation)}>📋</i>
             <span>{"{ }"} {isLast?'':','}</span>
         </span>)
     }
@@ -230,9 +230,9 @@ function renderArray(choosenPath: string, isLast: boolean, pathKey: string, arr:
     if (length > 0) {
         return (<div className={relation==1 ? "json-picked_tree" : ''}>
             <div>
-                { relation==2 ? <i data-pathkey={pathKey} data-choosearr="1" className={getPickArrStyle(choosenPath, pathKey)}>[✚]</i> : null }
+                { relation==2 ? <i data-pathkey={pathKey} data-querykey={pathKey.replace(/\"/g, '')} data-choosearr="1" className={getPickArrStyle(choosenPath, pathKey)}>[✚]</i> : null }
                 <span>{'['}</span>
-                <i data-pathkey={pathKey} className={getPickerStyle(relation)}>📋</i>
+                <i data-pathkey={pathKey} data-querykey={pathKey.replace(/\"/g, '')} className={getPickerStyle(relation)}>📋</i>
             </div>
             <ol className="json-array">
                 {
@@ -248,7 +248,7 @@ function renderArray(choosenPath: string, isLast: boolean, pathKey: string, arr:
         </div>)
     } else {
         return (<span>
-            <i data-pathkey={pathKey} className={getPickerStyle(relation)}>📋</i>
+            <i data-pathkey={pathKey} data-querykey={pathKey.replace(/\"/g, '')} className={getPickerStyle(relation)}>📋</i>
             <span>{"[ ]"} {isLast?'':','}</span>
         </span>)
     }
