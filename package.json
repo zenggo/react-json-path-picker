@@ -1,6 +1,6 @@
 {
   "name": "react-json-path-picker",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "a react json path picker, based on json-path-picker",
   "main": "index.js",
   "types": "./dist/react-json-path-picker.d.ts",
