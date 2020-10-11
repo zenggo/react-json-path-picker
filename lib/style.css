@@ -1,0 +1,49 @@
+/* Syntax highlighting for JSON objects */
+ul.json-dict, ol.json-array {
+  list-style-type: none;
+  margin: 0 0 0 1px;
+  border-left: 1px dotted #ccc;
+  padding-left: 2em;
+}
+.json-literal {
+  color: #777;
+}
+.json-key {
+  font-weight: bold;
+  color: #108ee9;
+}
+
+/* Copy path icon */
+.json-pick_path {
+  color: #ccc;
+  cursor: pointer;
+  margin-right: 12px;
+  margin-left: 5px;
+  font-style: normal;
+}
+
+.json-pick_path_ancestor {
+  color: #7f3dc5;
+}
+
+.json-pick_path:hover, .json-picked {
+  color: #f04134;
+}
+
+.json-picked_tree {
+  background: #eee;
+}
+
+.json-pick_arr {
+  position: relative;
+  right: 2px;
+  color: #ccc;
+  cursor: pointer;
+  font-style: normal;
+  font-weight: bold;
+  margin-left: -20px;
+}
+
+.json-pick_arr:hover, .json-picked_arr {
+  color: #f04134;
+}
