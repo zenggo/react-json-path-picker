@@ -18,6 +18,7 @@ class Main extends React.Component<{}, S> {
         }
         this.generate = this.generate.bind(this)
         this.mapPath = this.mapPath.bind(this)
+        this.onChoosePath = this.onChoosePath.bind(this)
     }
     _text = ''
     generate() {
@@ -28,6 +29,12 @@ class Main extends React.Component<{}, S> {
     mapPath() {
         this.setState({
             path: this.state.pathText
+        })
+    }
+    onChoosePath(path: string) {
+        this.setState({
+            path,
+            pathText: path
         })
     }
     render() {
@@ -52,7 +59,7 @@ class Main extends React.Component<{}, S> {
             <div style={{width:'70%',float:'left',boxSizing:'border-box',paddingLeft:'50px'}}>
                 <JsonPathPicker
                     json={this.state.json}
-                    onChoose={path=> this.setState({path, pathText:path})}
+                    onChoose={this.onChoosePath}
                     path={this.state.path}
                 />
             </div>
