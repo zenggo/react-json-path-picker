@@ -24,3 +24,7 @@ onChoosePath = (path)=> {...}
 if you have a json string like '[{"x":1}, {"x":2}, {"x":3}]', you can click '"x":1' and then click button before'[', and then you have choosed three x attr in array and finally get path string '[*].x'
 
 ![](https://github.com/zenggo/react-json-path-picker/blob/master/pic/2.png?raw=true)
+
+
+## dev
+For development: `npm run dev`
