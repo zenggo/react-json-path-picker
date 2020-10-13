@@ -1,8 +1,6 @@
 /**
  * author: akunzeng
  * 20170705
- * 
- * notice!!!: JsonPathPick's prop - json, shouldn't have any key name including " ", otherwise the getTargetByJsonPath function (or other function you defined) will not work properlly.
  */
 
 import * as React from 'react'
@@ -71,7 +69,7 @@ function escape(str: string) :string {
     return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
 }
 
-
+//TODO: ReactElement -> PureComponent, to prevent rerendering uncorrelated object/arrays when path changes
 /**
  * recursively generate jsxs by json data
  * @param choosenPath
